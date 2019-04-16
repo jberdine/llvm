@@ -1232,6 +1232,27 @@ LLVMMetadataRef LLVMDIBuilderCreateGlobalVariableExpression(
       nullptr, AlignInBits));
 }
 
+LLVMMetadataRef LLVMDIGlobalVariableExpressionGetVariable(LLVMMetadataRef GVE) {
+  return wrap(unwrapDI<DIGlobalVariableExpression>(GVE)->getVariable());
+}
+
+LLVMMetadataRef LLVMDIGlobalVariableExpressionGetExpression(
+    LLVMMetadataRef GVE) {
+  return wrap(unwrapDI<DIGlobalVariableExpression>(GVE)->getExpression());
+}
+
+LLVMMetadataRef LLVMDIVariableGetFile(LLVMMetadataRef Var) {
+  return wrap(unwrapDI<DIVariable>(Var)->getFile());
+}
+
+LLVMMetadataRef LLVMDIVariableGetScope(LLVMMetadataRef Var) {
+  return wrap(unwrapDI<DIVariable>(Var)->getScope());
+}
+
+unsigned LLVMDIVariableGetLine(LLVMMetadataRef Var) {
+  return unwrapDI<DIVariable>(Var)->getLine();
+}
+
 LLVMMetadataRef LLVMTemporaryMDNode(LLVMContextRef Ctx, LLVMMetadataRef *Data,
                                     size_t Count) {
   return wrap(
@@ -1341,6 +1362,21 @@ LLVMMetadataRef LLVMGetSubprogram(LLVMValueRef Func) {
 
 void LLVMSetSubprogram(LLVMValueRef Func, LLVMMetadataRef SP) {
   unwrap<Function>(Func)->setSubprogram(unwrap<DISubprogram>(SP));
+}
+
+unsigned LLVMDISubprogramGetLine(LLVMMetadataRef Subprogram) {
+  return unwrapDI<DISubprogram>(Subprogram)->getLine();
+}
+
+LLVMMetadataRef LLVMInstructionGetDebugLoc(LLVMValueRef Inst) {
+  return wrap(unwrap<Instruction>(Inst)->getDebugLoc().getAsMDNode());
+}
+
+void LLVMInstructionSetDebugLoc(LLVMValueRef Inst, LLVMMetadataRef Loc) {
+  if (Loc)
+    unwrap<Instruction>(Inst)->setDebugLoc(DebugLoc(unwrap<MDNode>(Loc)));
+  else
+    unwrap<Instruction>(Inst)->setDebugLoc(DebugLoc());
 }
 
 LLVMMetadataKind LLVMGetMetadataKind(LLVMMetadataRef Metadata) {
