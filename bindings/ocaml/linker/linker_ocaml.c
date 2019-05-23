@@ -31,3 +31,22 @@ CAMLprim value llvm_link_modules(LLVMModuleRef Dst, LLVMModuleRef Src) {
 
   return Val_unit;
 }
+
+/* llmodule -> lllinker */
+CAMLprim LLVMLinkerCtx llvm_get_linker(LLVMModuleRef Dest) {
+   return LLVMGetLinkerCtx(Dest);
+}
+
+/* lllinker -> llmodule -> unit */
+CAMLprim value llvm_link_in(LLVMLinkerCtx Dest, LLVMModuleRef Src) {
+  if (LLVMLinkInModule(Dest, Src))
+    llvm_raise(*caml_named_value("Llvm_linker.Error"), LLVMCreateMessage("Linking failed"));
+
+  return Val_unit;
+}
+
+/* lllinker -> unit */
+CAMLprim value llvm_linker_dispose(LLVMLinkerCtx L) {
+  LLVMDisposeLinkerCtx(L);
+  return Val_unit;
+}

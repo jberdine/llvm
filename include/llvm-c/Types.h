@@ -49,6 +49,13 @@ typedef int LLVMBool;
 typedef struct LLVMOpaqueMemoryBuffer *LLVMMemoryBufferRef;
 
 /**
+ * Used to pass linkers through LLVM interfaces.
+ *
+ * @see llvm::Linker
+ */
+typedef struct LLVMOpaqueLinkerCtx *LLVMLinkerCtx;
+
+/**
  * The top-level container for all LLVM global data. See the LLVMContext class.
  */
 typedef struct LLVMOpaqueContext *LLVMContextRef;

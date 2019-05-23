@@ -604,3 +604,20 @@ LLVMBool LLVMLinkModules2(LLVMModuleRef Dest, LLVMModuleRef Src) {
   std::unique_ptr<Module> M(unwrap(Src));
   return Linker::linkModules(*D, std::move(M));
 }
+
+DEFINE_SIMPLE_CONVERSION_FUNCTIONS(Linker, LLVMLinkerCtx)
+
+LLVMLinkerCtx LLVMGetLinkerCtx(LLVMModuleRef Dest) {
+  Module *D = unwrap(Dest);
+  return wrap(new Linker(*D));
+}
+
+LLVMBool LLVMLinkInModule(LLVMLinkerCtx Dest, LLVMModuleRef Src) {
+  Linker *L = unwrap(Dest);
+  std::unique_ptr<Module> M(unwrap(Src));
+  return L->linkInModule(std::move(M), Linker::Flags::None, {});
+}
+
+void LLVMDisposeLinkerCtx(LLVMLinkerCtx L) {
+  delete unwrap(L);
+}

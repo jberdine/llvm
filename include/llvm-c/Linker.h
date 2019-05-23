@@ -34,6 +34,23 @@ typedef enum {
 */
 LLVMBool LLVMLinkModules2(LLVMModuleRef Dest, LLVMModuleRef Src);
 
+/**
+ * Construct a linker for a module.
+ * @see llvm::Linker(Module&)
+ */
+LLVMLinkerCtx LLVMGetLinkerCtx(LLVMModuleRef Dest);
+
+/**
+ * Link Src into the composite Dest.
+ * @see llvm::Linker::linkInModule
+ */
+LLVMBool LLVMLinkInModule(LLVMLinkerCtx Dest, LLVMModuleRef Src);
+
+/**
+ * Destroy a linker.
+ */
+void LLVMDisposeLinkerCtx(LLVMLinkerCtx L);
+
 #ifdef __cplusplus
 }
 #endif
