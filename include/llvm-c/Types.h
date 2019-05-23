@@ -48,6 +48,8 @@ typedef int LLVMBool;
  */
 typedef struct LLVMOpaqueMemoryBuffer *LLVMMemoryBufferRef;
 
+typedef struct LLVMOpaqueLinkerCtx *LLVMLinkerCtx;
+
 /**
  * The top-level container for all LLVM global data. See the LLVMContext class.
  */

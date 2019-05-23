@@ -34,6 +34,12 @@ typedef enum {
 */
 LLVMBool LLVMLinkModules2(LLVMModuleRef Dest, LLVMModuleRef Src);
 
+LLVMLinkerCtx LLVMGetLinkerCtx(LLVMModuleRef Dest) ;
+
+LLVMBool LLVMLinkInModule(LLVMLinkerCtx Dest, LLVMModuleRef Src) ;
+
+void LLVMDisposeLinkerCtx(LLVMLinkerCtx L) ;
+
 #ifdef __cplusplus
 }
 #endif

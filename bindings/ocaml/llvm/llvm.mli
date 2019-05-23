@@ -25,6 +25,8 @@ type llcontext
     objects. See the [llvm::Module] class. *)
 type llmodule
 
+type lllinker
+
 (** Each value in the LLVM IR has a type, an instance of [lltype]. See the
     [llvm::Type] class. *)
 type lltype
