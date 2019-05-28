@@ -10,6 +10,7 @@
 #include "llvm-c/Analysis.h"
 #include "llvm-c/Initialization.h"
 #include "llvm/IR/Module.h"
+#include "llvm/Analysis/CallGraph.h"
 #include "llvm/IR/Verifier.h"
 #include "llvm/InitializePasses.h"
 #include "llvm/PassRegistry.h"
@@ -133,4 +134,46 @@ void LLVMViewFunctionCFG(LLVMValueRef Fn) {
 void LLVMViewFunctionCFGOnly(LLVMValueRef Fn) {
   Function *F = unwrap<Function>(Fn);
   F->viewCFGOnly();
+}
+DEFINE_SIMPLE_CONVERSION_FUNCTIONS(CallGraph, LLVMCallGraphCtx)
+
+LLVMCallGraphCtx getCallGraph(LLVMModuleRef M) {
+  auto cg = new CallGraph(*unwrap(M));
+  return wrap(cg);
+}
+
+void disposeCallGraph(LLVMCallGraphCtx cg) {
+  delete unwrap(cg);
+}
+
+unsigned LLVMGetCalleeSize(LLVMCallGraphCtx cgctx, LLVMValueRef Fn) {
+  CallGraph* cg = unwrap(cgctx);
+  if (const Function *F = dyn_cast<Function>(unwrap(Fn))) {
+    return (*cg)[F]->size();
+
+  }
+  assert(false && "Passed a non function to get calles");
+  return 0;
+}
+
+unsigned LLVMGetCalleeRefsNum(LLVMCallGraphCtx cgctx, LLVMValueRef Fn) {
+  CallGraph* cg = unwrap(cgctx);
+  if (const Function *F = dyn_cast<Function>(unwrap(Fn))) {
+    return (*cg)[F]->getNumReferences();
+
+  }
+  assert(false && "Passed a non function to get calles");
+  return 0;
+}
+LLVMValueRef LLVMGetIthCallee(LLVMCallGraphCtx cgctx, LLVMValueRef Fn, unsigned index) {
+  CallGraph* cg = unwrap(cgctx);
+  if (const Function *F = dyn_cast<Function>(unwrap(Fn))) {
+    assert(index < (*cg)[F]->size() && "Callee index out of bounds");
+    CallGraphNode *cgn = (*cg)[F];
+    CallGraphNode *calledCgn = (*cgn)[index];
+    return wrap(calledCgn->getFunction());
+
+  }
+  assert(false && "Passed a non function to get calles");
+  return nullptr;
 }

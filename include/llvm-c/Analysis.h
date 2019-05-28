@@ -54,6 +54,12 @@ LLVMBool LLVMVerifyFunction(LLVMValueRef Fn, LLVMVerifierFailureAction Action);
 void LLVMViewFunctionCFG(LLVMValueRef Fn);
 void LLVMViewFunctionCFGOnly(LLVMValueRef Fn);
 
+LLVMCallGraphCtx getCallGraph(LLVMModuleRef M);
+unsigned LLVMGetCalleeSize(LLVMCallGraphCtx cgctx, LLVMValueRef Fn);
+LLVMValueRef LLVMGetIthCallee(LLVMCallGraphCtx cgctx, LLVMValueRef Fn, unsigned index);
+unsigned LLVMGetCalleeRefsNum(LLVMCallGraphCtx cgctx, LLVMValueRef Fn);
+void disposeCallGraph(LLVMCallGraphCtx cg);
+
 /**
  * @}
  */

@@ -33,6 +33,9 @@ type lllinker
     [llvm::Type] class. *)
 type lltype
 
+(** LLVM representation of a  callgrapgh. See [llvm::CallGraph]. *)
+type llcallgraph
+
 (** Any value in the LLVM IR. Functions, instructions, global variables,
     constants, and much more are all [llvalues]. See the [llvm::Value] class.
     This type covers a wide range of subclasses. *)
