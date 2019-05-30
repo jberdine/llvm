@@ -116,7 +116,7 @@ void LLVMAddIPSCCPPass(LLVMPassManagerRef PM) {
 
 void LLVMAddInternalizePass(LLVMPassManagerRef PM, unsigned AllButMain) {
   auto PreserveMain = [=](const GlobalValue &GV) {
-    return AllButMain && GV.getName() == "main";
+    return AllButMain && (GV.getName() == "main" || GV.getName() == "__llair_main" || GV.getName() == "_Z12__llair_mainv");
   };
   unwrap(PM)->add(createInternalizePass(PreserveMain));
 }
