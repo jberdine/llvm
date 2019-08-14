@@ -44,3 +44,28 @@ external view_function_cfg : Llvm.llvalue -> unit = "llvm_view_function_cfg"
     See [llvm::Function::viewCFGOnly]. *)
 external view_function_cfg_only : Llvm.llvalue -> unit
                                 = "llvm_view_function_cfg_only"
+
+(** [get_callgraph m] gets the call graph of module [m]. See [llvm::CallGraph(Module M)] *)
+val get_callgraph :  Llvm.llmodule -> Llvm.llcallgraph 
+
+(** [dispose_callgraph cg] frees the [cg] memory. See [llvm::~CallGraph] *)
+val dispose_callgraph : Llvm.llcallgraph -> unit
+
+(** [fold_callees cg f func int] applies [f] to the functions called by [func]. It skips external nodes *)
+val fold_callees : Llvm.llcallgraph -> ('a -> Llvm.llvalue -> 'a) -> Llvm.llvalue -> 'a -> 'a 
+
+
+(** [get_callee_numrefs cg func] gets the number of incoming edges in [cg] to [func]. 
+* It includes external nodes. See [llvm::CallGraphNode::getNumReferences]*)
+val get_callee_numrefs : Llvm.llcallgraph -> Llvm.llvalue -> int 
+
+(** [get_callee_size cg func] returns the number of functions called by [func]. To be used
+* as a bound for [git_ith_callee]. See [llvm:::CallGraphNode::size]. Unless you need external
+* nodes use [fold_callees] instead.*)
+val get_callee_size : Llvm.llcallgraph -> Llvm.llvalue -> int 
+
+(** [get_ith_callee cg func i] gets the [i]th function called by [func]. Unless you need external
+* nodes use [fold_callees] instead. See [llvm::CallGraphNode::operator[]] and [llvm::CallGraphNode::getFunction]
+* The option is empty if getFunction() returns a null pointer which is the case for external nodes.*)
+val get_ith_callee : Llvm.llcallgraph -> Llvm.llvalue -> int -> Llvm.llvalue option
+

@@ -70,3 +70,41 @@ CAMLprim value llvm_view_function_cfg_only(LLVMValueRef Fn) {
   LLVMViewFunctionCFGOnly(Fn);
   return Val_unit;
 }
+
+/* Llvm.llcallgraph -> unit */
+CAMLprim value llvm_dispose_callgraph(LLVMCallGraphCtx Cg) {
+  disposeCallGraph(Cg);
+  return Val_unit;
+}
+
+/* Llvm.llmodule -> Llvm.llcallgraph */
+CAMLprim LLVMCallGraphCtx llvm_get_callgraph(LLVMModuleRef M) {
+  return getCallGraph(M);
+}
+
+/* Llvm.llcallgraph -> Llvm.llmodule -> int */
+CAMLprim value llvm_get_callee_size(LLVMCallGraphCtx CgCtx, LLVMValueRef Fn) {
+  unsigned size = LLVMGetCalleeSize(CgCtx, Fn);
+  return Val_int(size);
+}
+
+/* Llvm.llcallgraph -> Llvm.llmodule -> int */
+CAMLprim value llvm_get_callee_num_refs(LLVMCallGraphCtx CgCtx, LLVMValueRef Fn) {
+  unsigned numrefs= LLVMGetCalleeRefsNum(CgCtx, Fn);
+  return Val_int(numrefs);
+}
+
+/* Llvm.llcallgraph -> Llvm.llvalue -> int -> Llvm.llvalue option */
+CAMLprim value llvm_get_ith_callee(LLVMCallGraphCtx CgCtx, LLVMValueRef Fn, value Index) {
+  CAMLparam0();
+  CAMLlocal1(Option);
+  LLVMValueRef ret = LLVMGetIthCallee(CgCtx, Fn, Int_val(Index));
+  if(ret == NULL) {
+    Option = Val_int(0);
+  } else {
+    Option = caml_alloc(1,0);
+    Store_field(Option, 0, ret);
+  }
+  CAMLreturn(Option);
+}
+

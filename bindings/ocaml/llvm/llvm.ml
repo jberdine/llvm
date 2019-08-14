@@ -20,6 +20,7 @@ type llattrkind
 type llattribute
 type llmemorybuffer
 type llmdkind
+type llcallgraph
 
 exception FeatureDisabled of string
 
